@@ -1,0 +1,50 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class PlayController : MonoBehaviour {
+
+    private Rigidbody rb;
+    public Text countText;
+    public Text winText;
+    public float speed;
+    private int Count;
+
+    void Start ()
+    {
+        rb = GetComponent<Rigidbody>();
+        Count = 0;
+        SetCountText();
+        winText.text = "";
+    }
+
+    void FixedUpdate ()
+    {
+        float moveHorizontal = Input.GetAxis("Horizontal");
+        float moveVertical = Input.GetAxis("Vertical");
+
+        Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+
+        rb.AddForce(movement * speed);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Pick Up"))
+        {
+            other.gameObject.SetActive(false);
+            Count = Count + 1;
+            SetCountText();
+        }
+    }
+
+    void SetCountText ()
+    {
+        countText.text = "Count: " + Count.ToString();
+        if (Count == 10)
+        {
+            winText.text = "You Win!";
+        }
+    }
+}
